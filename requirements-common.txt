@@ -9,6 +9,7 @@ requests==2.23.0
 urllib3==1.25.8
 wrapt==1.12.1
 jsonschema==3.2.0
+numpy==1.18.1
 TA-Lib==0.4.17
 tabulate==0.8.6
 pycoingecko==1.2.0

@@ -6,6 +6,7 @@ Read the documentation to know what cli arguments you need.
 
 from freqtrade.exceptions import FreqtradeException, OperationalException
 import sys
+import traceback
 # check min. python version
 if sys.version_info < (3, 6):
     sys.exit("Freqtrade requires Python version >= 3.6")
@@ -51,7 +52,7 @@ def main(sysargv: List[str] = None) -> None:
         logger.info('SIGINT received, aborting ...')
         return_code = 0
     except FreqtradeException as e:
-        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return_code = 2
     except Exception:
         logger.exception('Fatal exception!')

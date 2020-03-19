@@ -1,0 +1,32 @@
+FROM python:3.8
+
+RUN apt-get update \
+ && apt-get -y install build-essential \
+		       libssl-dev \
+		       libffi-dev \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz \
+ && tar -xvf ta-lib-0.4.0-src.tar.gz \
+ && cd ta-lib \
+ && rm config.guess \
+ && rm config.sub \
+ && wget 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' -O config.guess \
+ && wget 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD' -O config.sub \
+ && ./configure --prefix=/usr \
+ && make \
+ && make install \
+ && rm -rf ta-lib*
+
+COPY ./requirements-common.txt /requirements-common.txt
+COPY ./requirements.txt /requirements.txt
+RUN python3 -m pip install -r /requirements.txt --no-cache-dir \
+ && rm /requirements.txt \
+ && rm /requirements-common.txt
+
+COPY . /freqtrade
+WORKDIR /freqtrade
+RUN python3 -m pip install -e . --no-cache-dir
+
+ENTRYPOINT ["python3", "./freqtrade/main.py"]
