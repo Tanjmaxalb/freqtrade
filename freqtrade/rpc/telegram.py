@@ -79,8 +79,21 @@ class Telegram(RPC):
         registers all known command handlers
         and starts polling for message updates
         """
+        if "proxy" not in self._config["telegram"]:
+            kwargs = {}
+        else:
+            kwargs = {
+                "request_kwargs": {
+                    "proxy_url": self._config["telegram"]["proxy"],
+                    "urllib3_proxy_kwargs": {
+                        "assert_hostname": "False",
+                        "cert_reqs": "CERT_NONE"
+                    }
+                }
+            }
+
         self._updater = Updater(token=self._config['telegram']['token'], workers=0,
-                                use_context=True)
+                                use_context=True, **kwargs)
 
         # Register command handler and start telegram message polling
         handles = [

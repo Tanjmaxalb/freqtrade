@@ -1,15 +1,17 @@
 import logging
 import sys
+import urllib3
 
 from logging import Formatter
 from logging.handlers import RotatingFileHandler, SysLogHandler
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from typing import Any, Dict, List
 
 from freqtrade.exceptions import OperationalException
 
 
 logger = logging.getLogger(__name__)
-
+urllib3.disable_warnings(InsecureRequestWarning)
 
 def _set_loggers(verbosity: int = 0) -> None:
     """
